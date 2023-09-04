@@ -20,6 +20,7 @@ model User {
   address          String            @db.VarChar(255)
   profileImg       String            @db.VarChar(255)
   reviewAndRatings ReviewAndRating[]
+  orders           Order[]
 
   @@map("users")
 }
@@ -58,7 +59,24 @@ model ReviewAndRating {
   @@map("review_and_ratings")
 }
 
+model Order {
+  id           String      @id @default(uuid())
+  orderedBooks Json        @db.Json
+  status       OrderStatus @default(pending)
+  createdAt    DateTime    @default(now())
+  userId       String
+  user         User        @relation(fields: [userId], references: [id])
+
+  @@map("orders")
+}
+
 enum UserRole {
   admin
   customer
+}
+
+enum OrderStatus {
+  pending
+  shipped
+  delivered
 }
