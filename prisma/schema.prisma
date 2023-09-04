@@ -11,14 +11,15 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  name       String   @db.VarChar(255)
-  email      String   @unique @db.VarChar(255)
-  password   String   @db.VarChar(255)
-  role       UserRole
-  contactNo  String   @db.VarChar(255)
-  address    String   @db.VarChar(255)
-  profileImg String   @db.VarChar(255)
+  id               String            @id @default(uuid())
+  name             String            @db.VarChar(255)
+  email            String            @unique @db.VarChar(255)
+  password         String            @db.VarChar(255)
+  role             UserRole
+  contactNo        String            @db.VarChar(255)
+  address          String            @db.VarChar(255)
+  profileImg       String            @db.VarChar(255)
+  reviewAndRatings ReviewAndRating[]
 
   @@map("users")
 }
@@ -32,14 +33,29 @@ model Category {
 }
 
 model Book {
-  id              String   @id @default(uuid())
-  title           String   @db.VarChar(255)
-  author          String   @db.VarChar(255)
-  price           Float
-  genre           String   @db.VarChar(255)
-  publicationDate DateTime
-  categoryId      String
-  category        Category @relation(fields: [categoryId], references: [id])
+  id               String            @id @default(uuid())
+  title            String            @db.VarChar(255)
+  author           String            @db.VarChar(255)
+  price            Float
+  genre            String            @db.VarChar(255)
+  publicationDate  DateTime
+  categoryId       String
+  category         Category          @relation(fields: [categoryId], references: [id])
+  reviewAndRatings ReviewAndRating[]
+
+  @@map("books")
+}
+
+model ReviewAndRating {
+  id     String @id @default(uuid())
+  review String @db.VarChar(255)
+  rating Int
+  userId String
+  bookId String
+  user   User   @relation(fields: [userId], references: [id])
+  book   Book   @relation(fields: [bookId], references: [id])
+
+  @@map("review_and_ratings")
 }
 
 enum UserRole {
