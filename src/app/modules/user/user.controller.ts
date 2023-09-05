@@ -1,34 +1,17 @@
 import type { RequestHandler } from "express";
-import { paginationFields } from "../../../constants/pagination.constant";
 import ApiError from "../../../errors/ApiError";
-import pick from "../../../shared/pick";
 import sendResponse from "../../../shared/sendResponse";
 import catchAsyncError from "../../middlewares/catchAsyncError";
 import { UserService } from "./user.service";
-import { userFilterableFields } from "./user.constant";
-
-const insertToDB: RequestHandler = catchAsyncError(async (req, res) => {
-  const result = await UserService.insertToDB(req.body);
-
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    data: result,
-  });
-});
 
 const getAllFromDB: RequestHandler = catchAsyncError(async (req, res) => {
-  const filters = pick(req.query, userFilterableFields);
-  const paginationOptions = pick(req.query, paginationFields);
-
-  const result = await UserService.getAllFromDB(filters, paginationOptions);
+  const result = await UserService.getAllFromDB();
 
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: "User retrieved successfully!",
-    data: result.data,
-    meta: result.meta,
+    data: result,
   });
 });
 
@@ -72,7 +55,6 @@ const deleteFromDB: RequestHandler = catchAsyncError(async (req, res) => {
 });
 
 export const UserController = {
-  insertToDB,
   getAllFromDB,
   getByIdFromDB,
   updateIntoDB,

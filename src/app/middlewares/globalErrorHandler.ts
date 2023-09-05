@@ -8,12 +8,11 @@ import handleClientError from "../../errors/handleClientError";
 import handleValidationError from "../../errors/handleValidationError";
 import handleZodError from "../../errors/handleZodError";
 import type { IGenericErrorMessage } from "../../interfaces/error.interface";
-import { errorLogger } from "../../shared/logger";
 
 const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   config.env === "development"
     ? console.log("globalErrorHandler", error)
-    : errorLogger.error("globalErrorHandler", error);
+    : console.log("globalErrorHandler", error);
 
   let statusCode = 500;
   let message = "Something went wrong!";

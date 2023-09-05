@@ -6,23 +6,19 @@ import { CategoryController } from "./category.controller";
 const router = express.Router();
 
 router.get("/:id", CategoryController.getByIdFromDB);
-router.get("/", CategoryController.getAllFromDB);
+router.get("/", auth(ENUM_USER_ROLE.ADMIN), CategoryController.getAllFromDB);
 
-router.post(
-  "/create-faculty",
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  CategoryController.insertToDB
-);
+router.post("/create-category", CategoryController.insertToDB);
 
 router.patch(
   "/:id",
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.ADMIN),
   CategoryController.updateIntoDB
 );
 
 router.delete(
   "/:id",
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.ADMIN),
   CategoryController.deleteFromDB
 );
 

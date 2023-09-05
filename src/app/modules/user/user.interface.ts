@@ -1,4 +1,4 @@
 export type IUserFilters = {
   search?: string;
-  title?: string;
+  name?: string;
 };

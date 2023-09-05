@@ -14,7 +14,8 @@
     "lint-prettier": "pnpm lint:check && pnpm prettier:check",
     "prepare": "husky install",
     "test": "cross-env NODE_ENV=test jest --testTimeout=5000",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",

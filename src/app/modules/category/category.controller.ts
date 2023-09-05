@@ -1,11 +1,8 @@
 import type { RequestHandler } from "express";
-import { paginationFields } from "../../../constants/pagination.constant";
 import ApiError from "../../../errors/ApiError";
-import pick from "../../../shared/pick";
 import sendResponse from "../../../shared/sendResponse";
 import catchAsyncError from "../../middlewares/catchAsyncError";
 import { CategoryService } from "./category.service";
-import { categoryFilterableFields } from "./category.constant";
 
 const insertToDB: RequestHandler = catchAsyncError(async (req, res) => {
   const result = await CategoryService.insertToDB(req.body);
@@ -18,17 +15,13 @@ const insertToDB: RequestHandler = catchAsyncError(async (req, res) => {
 });
 
 const getAllFromDB: RequestHandler = catchAsyncError(async (req, res) => {
-  const filters = pick(req.query, categoryFilterableFields);
-  const paginationOptions = pick(req.query, paginationFields);
-
-  const result = await CategoryService.getAllFromDB(filters, paginationOptions);
+  const result = await CategoryService.getAllFromDB();
 
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: "Category retrieved successfully!",
-    data: result.data,
-    meta: result.meta,
+    data: result,
   });
 });
 
