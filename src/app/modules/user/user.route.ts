@@ -5,8 +5,8 @@ import { UserController } from "./user.controller";
 
 const router = express.Router();
 
-router.get("/:id", UserController.getByIdFromDB);
-router.get("/", UserController.getAllFromDB);
+router.get("/:id", auth(ENUM_USER_ROLE.ADMIN), UserController.getByIdFromDB);
+router.get("/", auth(ENUM_USER_ROLE.ADMIN), UserController.getAllFromDB);
 
 router.patch("/:id", auth(ENUM_USER_ROLE.ADMIN), UserController.updateIntoDB);
 
