@@ -9,8 +9,8 @@ router.get("/:id", OrderController.getByIdFromDB);
 router.get("/", OrderController.getAllFromDB);
 
 router.post(
-  "/create-faculty",
-  auth(ENUM_USER_ROLE.ADMIN),
+  "/create-order",
+  auth(ENUM_USER_ROLE.CUSTOMER),
   OrderController.insertToDB
 );
 
