@@ -8,7 +8,11 @@ const router = express.Router();
 router.get("/:id", CategoryController.getByIdFromDB);
 router.get("/", auth(ENUM_USER_ROLE.ADMIN), CategoryController.getAllFromDB);
 
-router.post("/create-category", CategoryController.insertToDB);
+router.post(
+  "/create-category",
+  auth(ENUM_USER_ROLE.ADMIN),
+  CategoryController.insertToDB
+);
 
 router.patch(
   "/:id",

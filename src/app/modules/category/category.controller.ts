@@ -10,6 +10,7 @@ const insertToDB: RequestHandler = catchAsyncError(async (req, res) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
+    message: "Category created successfully",
     data: result,
   });
 });

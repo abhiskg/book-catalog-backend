@@ -7,7 +7,7 @@ const insertToDB = async (data: Category) => {
 };
 
 const getAllFromDB = async () => {
-  const result = await prisma.category.findMany();
+  const result = await prisma.category.findMany({});
 
   return result;
 };
