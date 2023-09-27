@@ -7,12 +7,12 @@ import { JwtHelper } from "../../helpers/jwt.helper";
 const auth =
   (...requireRoles: string[]) =>
   async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization;
-
-    if (!token) {
-      throw new ApiError(401, "You are not authorized");
-    }
     try {
+      const token = req.headers.authorization;
+
+      if (!token) {
+        throw new ApiError(401, "You are not authorized");
+      }
       const verifiedToken = JwtHelper.verifyToken(
         token,
         config.jwt.access_secret
