@@ -12,6 +12,7 @@ const insertToDB: RequestHandler = catchAsyncError(async (req, res) => {
 
   sendResponse(res, {
     statusCode: 200,
+    message: "Book created successfully",
     success: true,
     data: result,
   });

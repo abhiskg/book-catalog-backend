@@ -6,7 +6,7 @@ import { CategoryController } from "./category.controller";
 const router = express.Router();
 
 router.get("/:id", CategoryController.getByIdFromDB);
-router.get("/", auth(ENUM_USER_ROLE.ADMIN), CategoryController.getAllFromDB);
+router.get("/", CategoryController.getAllFromDB);
 
 router.post(
   "/create-category",

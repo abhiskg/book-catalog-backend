@@ -1,4 +1,4 @@
-import type { Prisma, Book } from "@prisma/client";
+import type { Book, Prisma } from "@prisma/client";
 import { PaginationHelper } from "../../../helpers/pagination.helper";
 import type { IPaginationOptions } from "../../../interfaces/pagination.interface";
 import { prisma } from "../../../server";

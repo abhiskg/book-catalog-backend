@@ -39,7 +39,7 @@ model Book {
   author           String            @db.VarChar(255)
   price            Float
   genre            String            @db.VarChar(255)
-  publicationDate  DateTime
+  publicationDate  String
   categoryId       String
   category         Category          @relation(fields: [categoryId], references: [id])
   reviewAndRatings ReviewAndRating[]
