@@ -6,6 +6,7 @@ import { BookController } from "./book.controller";
 const router = express.Router();
 
 router.get("/:id", BookController.getByIdFromDB);
+router.get("/:categoryId/category", BookController.getBooksByCategory);
 router.get("/", BookController.getAllFromDB);
 
 router.post(

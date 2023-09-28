@@ -33,6 +33,24 @@ const getAllFromDB: RequestHandler = catchAsyncError(async (req, res) => {
   });
 });
 
+const getBooksByCategory: RequestHandler = catchAsyncError(async (req, res) => {
+  const categoryId = req.params.categoryId;
+  const paginationOptions = pick(req.query, paginationFields);
+
+  const result = await BookService.getBooksByCategory(
+    categoryId,
+    paginationOptions
+  );
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Book retrieved successfully!",
+    data: result.data,
+    meta: result.meta,
+  });
+});
+
 const getByIdFromDB: RequestHandler = catchAsyncError(
   async (req, res, next) => {
     const result = await BookService.getByIdFromDB(req.params.id);
@@ -78,4 +96,5 @@ export const BookController = {
   getByIdFromDB,
   updateIntoDB,
   deleteFromDB,
+  getBooksByCategory,
 };

@@ -20,7 +20,7 @@ const getByIdFromDB: RequestHandler = catchAsyncError(
     const result = await UserService.getByIdFromDB(req.params.id);
 
     if (!result) {
-      return next(new ApiError(404, "Faculty not found"));
+      return next(new ApiError(404, "User not found"));
     }
 
     sendResponse(res, {
