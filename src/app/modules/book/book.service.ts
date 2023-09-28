@@ -18,11 +18,11 @@ const getAllFromDB = async (
     PaginationHelper.calculatePagination(paginationOptions, {
       limit: 10,
       page: 1,
-      sortBy: "createdAt",
+      sortBy: "price",
       sortOrder: "desc",
     });
 
-  const { search, ...filtersData } = filters;
+  const { search, category, maxPrice, minPrice, ...filtersData } = filters;
   const andConditions = [];
 
   if (search) {
@@ -33,6 +33,23 @@ const getAllFromDB = async (
           mode: "insensitive",
         },
       })),
+    });
+  }
+
+  if (category) {
+    andConditions.push({
+      category: {
+        id: category,
+      },
+    });
+  }
+
+  if (minPrice && maxPrice) {
+    andConditions.push({
+      price: {
+        gte: Number(minPrice),
+        lte: Number(maxPrice),
+      },
     });
   }
 
@@ -63,6 +80,7 @@ const getAllFromDB = async (
       page,
       limit,
       total,
+      totalPage: Math.ceil(total / limit),
     },
     data: result,
   };

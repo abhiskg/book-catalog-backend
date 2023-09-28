@@ -1,14 +1,13 @@
 import type { RequestHandler } from "express";
-import { paginationFields } from "../../../constants/pagination.constant";
 import ApiError from "../../../errors/ApiError";
-import pick from "../../../shared/pick";
 import sendResponse from "../../../shared/sendResponse";
 import catchAsyncError from "../../middlewares/catchAsyncError";
 import { OrderService } from "./order.service";
-import { orderFilterableFields } from "./order.constant";
 
 const insertToDB: RequestHandler = catchAsyncError(async (req, res) => {
-  const result = await OrderService.insertToDB(req.body);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const user = req.user as any;
+  const result = await OrderService.insertToDB(user?.id, req.body);
 
   sendResponse(res, {
     statusCode: 200,
@@ -18,23 +17,27 @@ const insertToDB: RequestHandler = catchAsyncError(async (req, res) => {
 });
 
 const getAllFromDB: RequestHandler = catchAsyncError(async (req, res) => {
-  const filters = pick(req.query, orderFilterableFields);
-  const paginationOptions = pick(req.query, paginationFields);
-
-  const result = await OrderService.getAllFromDB(filters, paginationOptions);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const user = req.user as any;
+  const result = await OrderService.getAllFromDB(user?.id, user?.role);
 
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: "Order retrieved successfully!",
-    data: result.data,
-    meta: result.meta,
+    data: result,
   });
 });
 
 const getByIdFromDB: RequestHandler = catchAsyncError(
   async (req, res, next) => {
-    const result = await OrderService.getByIdFromDB(req.params.id);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const user = req.user as any;
+    const result = await OrderService.getByIdFromDB(
+      req.params.id,
+      user?.id,
+      user?.role
+    );
 
     if (!result) {
       return next(new ApiError(404, "Faculty not found"));
@@ -49,32 +52,8 @@ const getByIdFromDB: RequestHandler = catchAsyncError(
   }
 );
 
-const updateIntoDB: RequestHandler = catchAsyncError(async (req, res) => {
-  const result = await OrderService.updateIntoDB(req.params.id, req.body);
-
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: "Order Updated successfully!",
-    data: result,
-  });
-});
-
-const deleteFromDB: RequestHandler = catchAsyncError(async (req, res) => {
-  const result = await OrderService.deleteFromDB(req.params.id);
-
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: "Order deleted successfully!",
-    data: result,
-  });
-});
-
 export const OrderController = {
   insertToDB,
   getAllFromDB,
   getByIdFromDB,
-  updateIntoDB,
-  deleteFromDB,
 };
