@@ -8,102 +8,56 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderService = void 0;
-const pagination_helper_1 = require("../../../helpers/pagination.helper");
+const client_1 = require("@prisma/client");
 const server_1 = require("../../../server");
-const order_constant_1 = require("./order.constant");
-const insertToDB = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield server_1.prisma.order.create({ data });
+const insertToDB = (userId, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield server_1.prisma.order.create({
+        data: {
+            userId,
+            orderedBooks: payload === null || payload === void 0 ? void 0 : payload.orderedBooks,
+        },
+    });
     return result;
 });
-const getAllFromDB = (filters, paginationOptions) => __awaiter(void 0, void 0, void 0, function* () {
-    const { page, limit, skip, sortCondition } = pagination_helper_1.PaginationHelper.calculatePagination(paginationOptions, {
-        limit: 10,
-        page: 1,
-        sortBy: "createdAt",
-        sortOrder: "desc",
-    });
-    const { search } = filters, filtersData = __rest(filters, ["search"]);
-    const andConditions = [];
-    if (search) {
-        andConditions.push({
-            OR: order_constant_1.orderSearchableFields.map((field) => ({
-                [field]: {
-                    contains: search,
-                    mode: "insensitive",
+const getAllFromDB = (userId, role) => __awaiter(void 0, void 0, void 0, function* () {
+    let result;
+    if (role === client_1.UserRole.customer) {
+        result = yield server_1.prisma.order.findMany({
+            where: {
+                user: {
+                    id: userId,
                 },
-            })),
+            },
         });
     }
-    if (Object.keys(filtersData).length > 0) {
-        andConditions.push({
-            AND: Object.entries(filtersData).map(([field, value]) => {
-                return {
-                    [field]: {
-                        equals: value,
-                    },
-                };
-            }),
+    else {
+        result = yield server_1.prisma.order.findMany();
+    }
+    return result;
+});
+const getByIdFromDB = (id, userId, role) => __awaiter(void 0, void 0, void 0, function* () {
+    let result;
+    if (role === "customer") {
+        result = yield server_1.prisma.order.findUnique({
+            where: {
+                id,
+                userId,
+            },
         });
     }
-    const whereCondition = andConditions.length > 0 ? { AND: andConditions } : {};
-    const result = yield server_1.prisma.order.findMany({
-        where: whereCondition,
-        skip,
-        take: limit,
-        orderBy: sortCondition,
-    });
-    const total = yield server_1.prisma.order.count();
-    return {
-        meta: {
-            page,
-            limit,
-            total,
-        },
-        data: result,
-    };
-});
-const getByIdFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield server_1.prisma.order.findUnique({
-        where: {
-            id,
-        },
-    });
-    return result;
-});
-const updateIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield server_1.prisma.order.update({
-        where: {
-            id,
-        },
-        data: payload,
-    });
-    return result;
-});
-const deleteFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield server_1.prisma.order.delete({
-        where: {
-            id,
-        },
-    });
+    else {
+        result = yield server_1.prisma.order.findUnique({
+            where: {
+                id,
+            },
+        });
+    }
     return result;
 });
 exports.OrderService = {
     insertToDB,
     getAllFromDB,
     getByIdFromDB,
-    updateIntoDB,
-    deleteFromDB,
 };

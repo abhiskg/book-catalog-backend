@@ -13,15 +13,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderController = void 0;
-const pagination_constant_1 = require("../../../constants/pagination.constant");
 const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
-const pick_1 = __importDefault(require("../../../shared/pick"));
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const catchAsyncError_1 = __importDefault(require("../../middlewares/catchAsyncError"));
 const order_service_1 = require("./order.service");
-const order_constant_1 = require("./order.constant");
 const insertToDB = (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield order_service_1.OrderService.insertToDB(req.body);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const user = req.user;
+    const result = yield order_service_1.OrderService.insertToDB(user === null || user === void 0 ? void 0 : user.id, req.body);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
@@ -29,19 +28,20 @@ const insertToDB = (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0
     });
 }));
 const getAllFromDB = (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const filters = (0, pick_1.default)(req.query, order_constant_1.orderFilterableFields);
-    const paginationOptions = (0, pick_1.default)(req.query, pagination_constant_1.paginationFields);
-    const result = yield order_service_1.OrderService.getAllFromDB(filters, paginationOptions);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const user = req.user;
+    const result = yield order_service_1.OrderService.getAllFromDB(user === null || user === void 0 ? void 0 : user.id, user === null || user === void 0 ? void 0 : user.role);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
         message: "Order retrieved successfully!",
-        data: result.data,
-        meta: result.meta,
+        data: result,
     });
 }));
 const getByIdFromDB = (0, catchAsyncError_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield order_service_1.OrderService.getByIdFromDB(req.params.id);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const user = req.user;
+    const result = yield order_service_1.OrderService.getByIdFromDB(req.params.id, user === null || user === void 0 ? void 0 : user.id, user === null || user === void 0 ? void 0 : user.role);
     if (!result) {
         return next(new ApiError_1.default(404, "Faculty not found"));
     }
@@ -52,28 +52,8 @@ const getByIdFromDB = (0, catchAsyncError_1.default)((req, res, next) => __await
         data: result,
     });
 }));
-const updateIntoDB = (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield order_service_1.OrderService.updateIntoDB(req.params.id, req.body);
-    (0, sendResponse_1.default)(res, {
-        statusCode: 200,
-        success: true,
-        message: "Order Updated successfully!",
-        data: result,
-    });
-}));
-const deleteFromDB = (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield order_service_1.OrderService.deleteFromDB(req.params.id);
-    (0, sendResponse_1.default)(res, {
-        statusCode: 200,
-        success: true,
-        message: "Order deleted successfully!",
-        data: result,
-    });
-}));
 exports.OrderController = {
     insertToDB,
     getAllFromDB,
     getByIdFromDB,
-    updateIntoDB,
-    deleteFromDB,
 };

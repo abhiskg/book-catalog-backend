@@ -22,8 +22,24 @@ const signUp = (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, vo
         statusCode: 200,
         success: true,
         data: result,
+        message: "User created successfully!",
+    });
+}));
+const signIn = (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield auth_service_1.AuthService.signIn(req.body);
+    res.status(200).json({
+        success: true,
+        message: " User signin successfully!",
+        token: result,
+    });
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        data: result,
+        message: "User created successfully!",
     });
 }));
 exports.AuthController = {
     signUp,
+    signIn,
 };

@@ -16,11 +16,11 @@ const config_1 = __importDefault(require("../../config"));
 const ApiError_1 = __importDefault(require("../../errors/ApiError"));
 const jwt_helper_1 = require("../../helpers/jwt.helper");
 const auth = (...requireRoles) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const token = req.headers.authorization;
-    if (!token) {
-        throw new ApiError_1.default(401, "You are not authorized");
-    }
     try {
+        const token = req.headers.authorization;
+        if (!token) {
+            throw new ApiError_1.default(401, "You are not authorized");
+        }
         const verifiedToken = jwt_helper_1.JwtHelper.verifyToken(token, config_1.default.jwt.access_secret);
         req.user = verifiedToken;
         if (requireRoles.length > 0 &&

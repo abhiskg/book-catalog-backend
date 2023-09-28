@@ -24,6 +24,7 @@ const insertToDB = (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0
     const result = yield book_service_1.BookService.insertToDB(req.body);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
+        message: "Book created successfully",
         success: true,
         data: result,
     });
@@ -32,6 +33,18 @@ const getAllFromDB = (0, catchAsyncError_1.default)((req, res) => __awaiter(void
     const filters = (0, pick_1.default)(req.query, book_constant_1.bookFilterableFields);
     const paginationOptions = (0, pick_1.default)(req.query, pagination_constant_1.paginationFields);
     const result = yield book_service_1.BookService.getAllFromDB(filters, paginationOptions);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: "Book retrieved successfully!",
+        data: result.data,
+        meta: result.meta,
+    });
+}));
+const getBooksByCategory = (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const categoryId = req.params.categoryId;
+    const paginationOptions = (0, pick_1.default)(req.query, pagination_constant_1.paginationFields);
+    const result = yield book_service_1.BookService.getBooksByCategory(categoryId, paginationOptions);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
@@ -76,4 +89,5 @@ exports.BookController = {
     getByIdFromDB,
     updateIntoDB,
     deleteFromDB,
+    getBooksByCategory,
 };

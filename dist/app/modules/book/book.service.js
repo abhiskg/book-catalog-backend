@@ -32,10 +32,10 @@ const getAllFromDB = (filters, paginationOptions) => __awaiter(void 0, void 0, v
     const { page, limit, skip, sortCondition } = pagination_helper_1.PaginationHelper.calculatePagination(paginationOptions, {
         limit: 10,
         page: 1,
-        sortBy: "createdAt",
+        sortBy: "price",
         sortOrder: "desc",
     });
-    const { search } = filters, filtersData = __rest(filters, ["search"]);
+    const { search, category, maxPrice, minPrice } = filters, filtersData = __rest(filters, ["search", "category", "maxPrice", "minPrice"]);
     const andConditions = [];
     if (search) {
         andConditions.push({
@@ -45,6 +45,21 @@ const getAllFromDB = (filters, paginationOptions) => __awaiter(void 0, void 0, v
                     mode: "insensitive",
                 },
             })),
+        });
+    }
+    if (category) {
+        andConditions.push({
+            category: {
+                id: category,
+            },
+        });
+    }
+    if (minPrice && maxPrice) {
+        andConditions.push({
+            price: {
+                gte: Number(minPrice),
+                lte: Number(maxPrice),
+            },
         });
     }
     if (Object.keys(filtersData).length > 0) {
@@ -71,6 +86,35 @@ const getAllFromDB = (filters, paginationOptions) => __awaiter(void 0, void 0, v
             page,
             limit,
             total,
+            totalPage: Math.ceil(total / limit),
+        },
+        data: result,
+    };
+});
+const getBooksByCategory = (categoryId, paginationOptions) => __awaiter(void 0, void 0, void 0, function* () {
+    const { page, limit, skip, sortCondition } = pagination_helper_1.PaginationHelper.calculatePagination(paginationOptions, {
+        limit: 10,
+        page: 1,
+        sortBy: "price",
+        sortOrder: "desc",
+    });
+    const result = yield server_1.prisma.book.findMany({
+        where: {
+            category: {
+                id: categoryId,
+            },
+        },
+        skip,
+        take: limit,
+        orderBy: sortCondition,
+    });
+    const total = yield server_1.prisma.book.count();
+    return {
+        meta: {
+            page,
+            limit,
+            total,
+            totalPage: Math.ceil(total / limit),
         },
         data: result,
     };
@@ -106,4 +150,5 @@ exports.BookService = {
     getByIdFromDB,
     updateIntoDB,
     deleteFromDB,
+    getBooksByCategory,
 };

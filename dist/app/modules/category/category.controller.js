@@ -22,6 +22,7 @@ const insertToDB = (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
+        message: "Category created successfully",
         data: result,
     });
 }));

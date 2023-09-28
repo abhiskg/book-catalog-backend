@@ -10,6 +10,7 @@ const auth_1 = __importDefault(require("../../middlewares/auth"));
 const book_controller_1 = require("./book.controller");
 const router = express_1.default.Router();
 router.get("/:id", book_controller_1.BookController.getByIdFromDB);
+router.get("/:categoryId/category", book_controller_1.BookController.getBooksByCategory);
 router.get("/", book_controller_1.BookController.getAllFromDB);
 router.post("/create-book", (0, auth_1.default)(user_enum_1.ENUM_USER_ROLE.ADMIN), book_controller_1.BookController.insertToDB);
 router.patch("/:id", (0, auth_1.default)(user_enum_1.ENUM_USER_ROLE.ADMIN), book_controller_1.BookController.updateIntoDB);

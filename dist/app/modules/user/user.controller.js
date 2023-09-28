@@ -29,7 +29,7 @@ const getAllFromDB = (0, catchAsyncError_1.default)((req, res) => __awaiter(void
 const getByIdFromDB = (0, catchAsyncError_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_service_1.UserService.getByIdFromDB(req.params.id);
     if (!result) {
-        return next(new ApiError_1.default(404, "Faculty not found"));
+        return next(new ApiError_1.default(404, "User not found"));
     }
     (0, sendResponse_1.default)(res, {
         statusCode: 200,

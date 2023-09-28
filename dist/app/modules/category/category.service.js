@@ -16,7 +16,7 @@ const insertToDB = (data) => __awaiter(void 0, void 0, void 0, function* () {
     return result;
 });
 const getAllFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield server_1.prisma.category.findMany();
+    const result = yield server_1.prisma.category.findMany({});
     return result;
 });
 const getByIdFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
